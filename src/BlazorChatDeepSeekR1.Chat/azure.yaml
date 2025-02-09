@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: chatapp
+metadata:
+    template: azd-init@1.12.0
+services:
+    src:
+        language: dotnet
+        host: containerapp
+        project: ./BlazorChatDeepSeekR1.csproj
+
+hooks:
+  postprovision:
+    windows:
+      shell: pwsh
+      run: ./infra/post-script/store-env-variables.ps1
+      interactive: true
+      continueOnError: true
+    posix:
+      shell: sh
+      run: ./infra/post-script/store-env-variables.sh
+      interactive: true
+      continueOnError: true
+
+
+
