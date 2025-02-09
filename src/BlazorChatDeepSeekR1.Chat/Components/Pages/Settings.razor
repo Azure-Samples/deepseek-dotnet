@@ -22,7 +22,13 @@
     <input type="text" id="tenantId" @bind="tenantId" class="input-field" />
 </div>
 <button class="btn btn-primary" @onclick="SaveSettings">SAVE</button>
-<button class="btn btn-secondary" @onclick="SetGitHubModelsDefaults">Set GitHub Models Defaults</button>
+<button class="btn btn-secondary" @onclick="SetGitHubModelsDefaults">Set GitHub Models Default Endpoint</button>
+
+<p></p>
+<p>
+    To create a GitHub token to be used in the <strong>API Key / GitHub Token</strong> field, please follow the instructions
+    <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" target="_blank">here</a>.
+</p>
 
 @if (!string.IsNullOrEmpty(saveMessage))
 {
