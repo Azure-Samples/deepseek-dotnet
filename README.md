@@ -1,6 +1,4 @@
-# DeepSeek-R1 on Azure with .NET
-
-_Author: [Bruno Capuano](https://www.elbruno.com)_
+# DeepSeek-R1 with .NET on Azure AI Foundry and GitHub Models
 
 ## Introduction
 
