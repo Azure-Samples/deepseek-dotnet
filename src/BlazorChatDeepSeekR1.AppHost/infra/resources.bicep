@@ -92,6 +92,3 @@ output AZURE_CONTAINER_REGISTRY_NAME string = containerRegistry.name
 output AZURE_CONTAINER_APPS_ENVIRONMENT_NAME string = containerAppEnvironment.name
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = containerAppEnvironment.id
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = containerAppEnvironment.properties.defaultDomain
-
-// add for deepseek-r1 deployment
-output MANAGED_IDENTITY_TENANT_ID string = managedIdentity.properties.tenantId

@@ -17,10 +17,6 @@
     <label for="deploymentName">Deployment Name:</label>
     <input type="text" id="deploymentName" @bind="deploymentName" class="input-field" />
 </div>
-<div>
-    <label for="tenantId">Tenant ID:</label>
-    <input type="text" id="tenantId" @bind="tenantId" class="input-field" />
-</div>
 <button class="btn btn-primary" @onclick="SaveSettings">SAVE</button>
 <button class="btn btn-secondary" @onclick="SetGitHubModelsDefaults">Set GitHub Models Default Endpoint</button>
 
@@ -39,7 +35,6 @@
     private string endpoint = string.Empty;
     private string apiKey = string.Empty;
     private string deploymentName = string.Empty;
-    private string tenantId = string.Empty;
     private string saveMessage = string.Empty;
 
     [Inject]
@@ -49,8 +44,7 @@
     {
         endpoint = Configuration["endpoint"] ?? string.Empty;
         apiKey = Configuration["apikey"] ?? string.Empty;
-        deploymentName = Configuration["deploymentname"] ?? string.Empty;
-        tenantId = Configuration["tenantid"] ?? string.Empty;
+        deploymentName = Configuration["deploymentname"] ?? "DeepSeek-R1";
     }
 
     private void SaveSettings()
@@ -59,7 +53,6 @@
         Configuration["endpoint"] = endpoint;
         Configuration["apikey"] = apiKey;
         Configuration["deploymentname"] = deploymentName;
-        Configuration["tenantid"] = tenantId;
 
         // Display a message to inform the user that the changes were saved
         saveMessage = "Settings have been saved successfully.";

@@ -12,14 +12,6 @@ param location string
 @description('Id of the user or app to assign application roles')
 param principalId string = ''
 
-// @secure()
-// param deepseekr1ai string
-// @secure()
-// param deploymentname string
-// @secure()
-// param endpoint string
-// @secure()
-// param tenantid string
 
 var tags = {
   'azd-env-name': environmentName
@@ -30,7 +22,6 @@ resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   location: location
   tags: tags
 }
-
 module resources 'resources.bicep' = {
   scope: rg
   name: 'resources'
@@ -41,68 +32,15 @@ module resources 'resources.bicep' = {
   }
 }
 
-////////////////////////////////////////
-// START DEEPSEEK MODEL DEPLOYMENT
-////////////////////////////////////////
-var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
-// var disableKeyBasedAuth = true
-
-var aiServicesNameAndSubdomain = 'deepseekr1-${resourceToken}'
-module deepseekr1 'br/public:avm/res/cognitive-services/account:0.7.2' = {
-  name: 'deepseek'
+module deepseekr1 'deepseekr1/deepseekr1.module.bicep' = {
+  name: 'deepseekr1'
   scope: rg
   params: {
-    name: aiServicesNameAndSubdomain
     location: location
-    tags: tags
-    kind: 'AIServices'
-    customSubDomainName: aiServicesNameAndSubdomain
-    publicNetworkAccess: 'Enabled'
-    sku:  'S0'
-    deployments: [
-      {
-        name: 'DeepSeek-R1'
-        model: {
-          format: 'DeepSeek'
-          name: 'DeepSeek-R1'
-          version: '1'
-        }
-        sku: {
-          name: 'GlobalStandard'
-          capacity: 1
-        }
-      }]
-    disableLocalAuth: false
-    roleAssignments: [
-      {
-        principalId: resources.outputs.MANAGED_IDENTITY_PRINCIPAL_ID 
-        roleDefinitionIdOrName: 'Cognitive Services OpenAI User'        
-      }
-      {
-        principalId: resources.outputs.MANAGED_IDENTITY_PRINCIPAL_ID
-        roleDefinitionIdOrName: 'Cognitive Services User'
-      }
-      {
-        principalId: principalId
-        roleDefinitionIdOrName: 'Cognitive Services OpenAI User'        
-      }
-      {
-        principalId: principalId
-        roleDefinitionIdOrName: 'Cognitive Services User'
-      }
-    ]
+    principalId: resources.outputs.MANAGED_IDENTITY_PRINCIPAL_ID
+    principalType: 'ServicePrincipal'
   }
 }
-
-// deepseek output values
-output DEEPSEEKR1__CONNECTIONSTRING string = 'Endpoint=https://${deepseekr1.outputs.name}.services.ai.azure.com/'
-output DEEPSEEKR1_ENDPOINT string = 'https://${deepseekr1.outputs.name}.services.ai.azure.com/models/'
-output DEEPSEEKR1_DEPLOYMENT_NAME string = 'DeepSeek-R1'
-output DEEPSEEKR1_TENANT_ID string = resources.outputs.MANAGED_IDENTITY_TENANT_ID
-
-////////////////////////////////////////
-// END DEEPSEEK MODEL DEPLOYMENT
-////////////////////////////////////////
 
 output MANAGED_IDENTITY_CLIENT_ID string = resources.outputs.MANAGED_IDENTITY_CLIENT_ID
 output MANAGED_IDENTITY_NAME string = resources.outputs.MANAGED_IDENTITY_NAME
@@ -113,3 +51,4 @@ output AZURE_CONTAINER_REGISTRY_NAME string = resources.outputs.AZURE_CONTAINER_
 output AZURE_CONTAINER_APPS_ENVIRONMENT_NAME string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_NAME
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_ID
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN
+output DEEPSEEKR1_CONNECTIONSTRING string = deepseekr1.outputs.connectionString

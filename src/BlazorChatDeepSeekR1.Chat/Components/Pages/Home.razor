@@ -96,7 +96,6 @@
     private ChatCompletionsClient? client;
     private string apiKey = string.Empty;
     private string endpoint = string.Empty;
-    private string tenantId = string.Empty;
     private string deploymentName = "DeepSeek-R1";
     [Inject] private IConfiguration Configuration { get; set; } = default!;
     [Inject] private ILogger<Program> Logger { get; set; } = default!;
@@ -168,7 +167,6 @@
             // read the settings from the configuration
             endpoint = Configuration["endpoint"] ?? throw new ArgumentNullException("Endpoint");
             apiKey = Configuration["apikey"] ?? string.Empty;
-            tenantId = Configuration["tenantid"] ?? string.Empty;
             deploymentName = Configuration["deploymentname"] ?? "DeepSeek-R1";
 
             Logger.LogInformation($"===================================================");
@@ -179,11 +177,6 @@
             {
                 Logger.LogInformation("Using DefaultAzureCredential");
                 var options = new DefaultAzureCredentialOptions();
-                if (!string.IsNullOrEmpty(tenantId))
-                {
-                    Logger.LogInformation($"Using TenantId: {tenantId}");
-                    options.TenantId = tenantId;
-                }
                 var credential = new DefaultAzureCredential(options);
 
                 client = new ChatCompletionsClient(

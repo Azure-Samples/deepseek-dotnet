@@ -20,15 +20,6 @@ properties:
     registries:
       - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
         identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
-    secrets:
-      - name: connectionstrings--deepseekr1ai
-        value: '{{ .Env.DEEPSEEKR1__CONNECTIONSTRING }}'
-      - name: deploymentname
-        value: '{{ .Env.DEEPSEEKR1_DEPLOYMENT_NAME }}'    
-      - name: endpoint
-        value: '{{ .Env.DEEPSEEKR1_ENDPOINT }}'
-      - name: tenantid
-        value: '{{ .Env.DEEPSEEKR1_TENANT_ID }}'
   template:
     containers:
       - image: {{ .Image }}
@@ -46,14 +37,6 @@ properties:
             value: "true"
           - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY
             value: in_memory
-          - name: ConnectionStrings__deepseekr1ai
-            secretRef: connectionstrings--deepseekr1ai
-          - name: deploymentname
-            secretRef: deploymentname
-          - name: endpoint
-            secretRef: endpoint
-          - name: tenantid
-            secretRef: tenantid
     scale:
       minReplicas: 1
 tags:
